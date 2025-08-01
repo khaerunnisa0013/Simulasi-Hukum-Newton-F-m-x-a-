@@ -1,0 +1,33 @@
+<h2>🔬 Simulasi Hukum Newton (F = m × a)</h2>
+<p>Masukkan massa dan gaya untuk menghitung percepatan suatu benda berdasarkan Hukum Newton Kedua.</p>
+
+<label for="massa">Massa (kg):</label><br />
+<input type="number" id="massa" placeholder="Contoh: 10" required /><br /><br />
+
+<label for="gaya">Gaya (N):</label><br />
+<input type="number" id="gaya" placeholder="Contoh: 50" required /><br /><br />
+
+<button onclick="hitungPercepatan()">🔍 Hitung Percepatan</button><br /><br />
+
+<p><strong>Hasil:</strong> <span id="hasil"></span></p>
+
+<script>
+  function hitungPercepatan() {
+    const massa = parseFloat(document.getElementById('massa').value);
+    const gaya = parseFloat(document.getElementById('gaya').value);
+    const hasilElemen = document.getElementById('hasil');
+
+    if (isNaN(massa) || isNaN(gaya)) {
+      hasilElemen.innerText = "Mohon masukkan nilai massa dan gaya yang valid.";
+      return;
+    }
+
+    if (massa <= 0) {
+      hasilElemen.innerText = "Massa harus lebih dari 0 kg!";
+      return;
+    }
+
+    const percepatan = gaya / massa;
+    hasilElemen.innerText = percepatan.toFixed(2) + " m/s²";
+  }
+</script>
