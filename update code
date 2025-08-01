@@ -1,0 +1,73 @@
+<!doctype html>
+
+
+  
+  
+  Simulasi Hukum Newton II
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 30px;
+    }
+    h1 {
+      color: #333;
+    }
+    label, input {
+      display: block;
+      margin: 10px 0;
+    }
+    input {
+      padding: 8px;
+      width: 100%;
+      max-width: 300px;
+    }
+    button {
+  background: linear-gradient(to bottom, #4fc3f7 0%, #039be5 100%);
+  border: 1px solid #0288d1;
+  color: white;
+  padding: 10px 30px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0px 1px 2px rgba(0,0,0,0.2);
+}
+
+    #hasil {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+  </style>
+
+
+  <h1>Simulasi Hukum Newton II (F = m × a)</h1>
+
+  <label for="massa">Massa (kg):</label>
+  <input type="number" id="massa" placeholder="Masukkan massa dalam kg" />
+
+  <label for="gaya">Gaya (N):</label>
+  <input type="number" id="gaya" placeholder="Masukkan gaya dalam Newton" />
+
+  <button onclick="hitungPercepatan()">Hitung Percepatan</button>
+
+  <div id="hasil"></div>
+
+  <script>
+    function hitungPercepatan() {
+      const massa = parseFloat(document.getElementById("massa").value);
+      const gaya = parseFloat(document.getElementById("gaya").value);
+      const hasilElemen = document.getElementById("hasil");
+
+      if (isNaN(massa) || isNaN(gaya) || massa === 0) {
+        hasilElemen.innerText = "Masukkan nilai massa dan gaya yang valid.";
+        return;
+      }
+
+      const percepatan = gaya / massa;
+      hasilElemen.innerText = "Percepatan: " + percepatan.toFixed(2) + " m/s\u00B2";
+    }
+  </script>
+
+</!doctype>
