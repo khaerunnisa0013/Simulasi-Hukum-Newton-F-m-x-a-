@@ -1,0 +1,218 @@
+<!doctype html>
+
+
+  
+  
+  Game Edukatif Interaktif
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fefefe;
+      margin: 0;
+      padding: 0;
+    }
+    .game-container {
+      max-width: 700px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      text-align: center;
+    }
+    h2, p {
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    .btn {
+      display: inline-block;
+      margin: 10px 5px;
+      padding: 10px 15px;
+      font-size: 13px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn-option {
+      background-color: #eee;
+    }
+    .btn-option:hover {
+      background-color: #ddd;
+    }
+    .btn-primary {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .btn-secondary {
+      background-color: #f44336;
+      color: white;
+    }
+    .timer {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .space-between {
+      margin: 8px 0;
+    }
+  </style>
+
+
+  <div class="game-container">
+    <div id="intro">
+      <h2>Hai! 👋</h2>
+      <p>Apakah kamu ingin bermain tebak-tebakan edukatif dengan Nice???</p>
+      <button class="btn btn-primary" onclick="showCategory()">Iya Mau</button>
+      <button class="btn btn-secondary" onclick="location.reload()">Nanti Saja</button>
+    </div>
+
+    <div id="category" style="display:none">
+      <h2>Pilih Kategori:</h2>
+      <div class="space-between">
+        <button class="btn btn-option" onclick="startGame('hewan')">Hewan</button>
+        <button class="btn btn-option" onclick="startGame('buah')">Buah</button>
+        <button class="btn btn-option" onclick="startGame('negara')">Negara</button>
+        <button class="btn btn-option" onclick="startGame('bisnis')">Bisnis</button>
+        <button class="btn btn-option" onclick="startGame('ekonomi')">Ekonomi</button>
+      </div>
+    </div>
+
+    <div id="game" style="display:none">
+      <p class="timer">Timer: <span id="timer">30</span> detik</p>
+      <h2 id="question"></h2>
+      <div id="options"></div>
+      <p id="feedback"></p>
+      <div id="navButtons"></div>
+    </div>
+
+    <div id="summary" style="display:none">
+      <h2>Wahh kamu hebat! 🎉</h2>
+      <p id="result"></p>
+      <p id="motivation"></p>
+      <button class="btn btn-primary" onclick="showCategory()">Main Lagi</button>
+      <button class="btn btn-secondary" onclick="location.reload()">Selesai</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = {
+      hewan: [
+        { q: "Hewan apa yang dikenal sebagai raja hutan?", o: ["Singa", "Gajah", "Zebra", "Jerapah"], a: 0, f: "Singa dijuluki sebagai raja hutan karena keberaniannya." },
+        { q: "Hewan apa yang bisa terbang di malam hari dan menggunakan sonar?", o: ["Burung Hantu", "Kelelawar", "Elang", "Ayam"], a: 1, f: "Kelelawar menggunakan ekolokasi untuk bernavigasi." },
+        { q: "Hewan laut yang memiliki 8 lengan disebut?", o: ["Ubur-ubur", "Kepiting", "Gurita", "Ikan Pari"], a: 2, f: "Gurita memiliki delapan lengan dan sangat cerdas." },
+        { q: "Hewan darat tercepat adalah?", o: ["Kuda", "Macan", "Cheetah", "Serigala"], a: 2, f: "Cheetah bisa lari hingga 112 km/jam." },
+        { q: "Binatang apa yang menyimpan air di punuknya?", o: ["Kuda Nil", "Kanguru", "Unta", "Gajah"], a: 2, f: "Punuk unta menyimpan lemak untuk bertahan di gurun." }
+      ],
+      buah: [
+        { q: "Buah apa yang terkenal dengan kandungan vitamin C-nya?", o: ["Pisang", "Jeruk", "Apel", "Mangga"], a: 1, f: "Jeruk kaya vitamin C baik untuk daya tahan tubuh." },
+        { q: "Buah merah kecil yang sering jadi selai?", o: ["Blueberry", "Strawberry", "Semangka", "Ceri"], a: 1, f: "Strawberry sering dibuat selai dan kaya antioksidan." },
+        { q: "Buah apa yang berduri dan bau menyengat?", o: ["Durian", "Nanas", "Melon", "Pepaya"], a: 0, f: "Durian dijuluki raja buah oleh sebagian orang Asia Tenggara." },
+        { q: "Buah dengan biji besar dan warna oranye?", o: ["Pepaya", "Apel", "Sirsak", "Pir"], a: 0, f: "Pepaya kaya serat dan baik untuk pencernaan." },
+        { q: "Buah yang dihasilkan pohon pisang adalah?", o: ["Pepaya", "Pisang", "Nangka", "Delima"], a: 1, f: "Pisang mengandung kalium yang baik untuk jantung." }
+      ],
+      negara: [
+        { q: "Negara dengan Menara Eiffel adalah?", o: ["Italia", "Spanyol", "Perancis", "Belgia"], a: 2, f: "Menara Eiffel berada di Paris, Perancis." },
+        { q: "Negara terbesar di dunia adalah?", o: ["Kanada", "Amerika", "Rusia", "Cina"], a: 2, f: "Rusia merupakan negara dengan wilayah terluas di dunia." },
+        { q: "Ibukota Jepang adalah?", o: ["Kyoto", "Tokyo", "Osaka", "Nagoya"], a: 1, f: "Tokyo adalah pusat pemerintahan dan ekonomi Jepang." },
+        { q: "Negara mana yang dikenal dengan kangguru?", o: ["Australia", "India", "Brazil", "Afrika Selatan"], a: 0, f: "Australia adalah habitat asli kangguru." },
+        { q: "Negara tetangga Indonesia yang terkenal dengan Menara Petronas?", o: ["Singapura", "Malaysia", "Thailand", "Filipina"], a: 1, f: "Menara Kembar Petronas berada di Kuala Lumpur, Malaysia." }
+      ],
+      bisnis: [
+        { q: "Istilah untuk keuntungan dalam bisnis?", o: ["Modal", "Utang", "Laba", "Rugi"], a: 2, f: "Laba adalah selisih lebih antara pendapatan dan biaya." },
+        { q: "Orang yang menjalankan bisnis disebut?", o: ["Investor", "Wirausaha", "Pekerja", "Karyawan"], a: 1, f: "Wirausaha adalah orang yang berani ambil risiko memulai bisnis." },
+        { q: "Strategi untuk memasarkan produk disebut?", o: ["Distribusi", "Produksi", "Manajemen", "Pemasaran"], a: 3, f: "Pemasaran penting agar produk dikenal dan laku di pasaran." },
+        { q: "Apa itu branding?", o: ["Membangun citra produk", "Menjual produk", "Mengemas produk", "Menghitung stok"], a: 0, f: "Branding adalah proses menciptakan citra yang kuat di benak konsumen." },
+        { q: "Bisnis kecil disebut juga?", o: ["UKM", "BUMN", "Startup", "CSR"], a: 0, f: "UKM adalah Usaha Kecil Menengah." }
+      ],
+      ekonomi: [
+        { q: "Ilmu ekonomi mempelajari?", o: ["Hewan", "Uang dan sumber daya", "Cuaca", "Teknologi"], a: 1, f: "Ekonomi mempelajari alokasi sumber daya untuk kebutuhan manusia." },
+        { q: "Istilah naiknya harga barang adalah?", o: ["Inflasi", "Deflasi", "Resesi", "Ekspor"], a: 0, f: "Inflasi adalah kenaikan harga secara umum dan terus-menerus." },
+        { q: "Alat tukar yang sah di suatu negara disebut?", o: ["Logam", "Barang", "Uang", "Kartu"], a: 2, f: "Uang memudahkan transaksi ekonomi." },
+        { q: "Permintaan naik, maka harga cenderung?", o: ["Naik", "Turun", "Tetap", "Hilang"], a: 0, f: "Hukum permintaan: jika permintaan naik, harga naik." },
+        { q: "Ekspor artinya?", o: ["Membeli barang luar negeri", "Menjual barang keluar negeri", "Mengurangi produksi", "Menyimpan barang"], a: 1, f: "Ekspor meningkatkan devisa negara." }
+      ]
+    };
+
+    let currentCategory = "";
+    let currentIndex = 0;
+    let score = 0;
+    let incorrect = 0;
+    let timer;
+
+    function showCategory() {
+      document.getElementById("intro").style.display = "none";
+      document.getElementById("summary").style.display = "none";
+      document.getElementById("category").style.display = "block";
+    }
+
+    function startGame(cat) {
+      currentCategory = cat;
+      currentIndex = 0;
+      score = 0;
+      incorrect = 0;
+      document.getElementById("category").style.display = "none";
+      document.getElementById("game").style.display = "block";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      clearInterval(timer);
+      const q = questions[currentCategory][currentIndex];
+      document.getElementById("question").textContent = q.q;
+      document.getElementById("feedback").textContent = "";
+      const optionsHTML = q.o.map((opt, i) => `<button class='btn btn-option' onclick='checkAnswer(${i})'>${opt}</button>`).join("<br>");
+      document.getElementById("options").innerHTML = optionsHTML;
+      document.getElementById("navButtons").innerHTML = "";
+      let timeLeft = 30;
+      document.getElementById("timer").textContent = timeLeft;
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          showFeedback(false, "Waktu habis!");
+        }
+      }, 1000);
+    }
+
+    function checkAnswer(index) {
+      clearInterval(timer);
+      const q = questions[currentCategory][currentIndex];
+      if (index === q.a) {
+        score++;
+        showFeedback(true, `Benar! 🎉<br><small>${q.f}</small>`);
+      } else {
+        incorrect++;
+        showFeedback(false, "Salah! Coba lagi ya!");
+      }
+    }
+
+    function showFeedback(correct, message) {
+      document.getElementById("feedback").innerHTML = message;
+      document.getElementById("options").innerHTML = "";
+      let btns = "";
+      if (!correct) {
+        btns += `<button class='btn btn-primary' onclick='showQuestion()'>Coba Lagi</button>`;
+      } else if (currentIndex < 4) {
+        btns += `<button class='btn btn-primary' onclick='nextQuestion()'>Lanjut Soal Berikutnya</button>`;
+      } else {
+        btns += `<button class='btn btn-primary' onclick='showSummary()'>Lihat Hasil</button>`;
+      }
+      document.getElementById("navButtons").innerHTML = btns;
+    }
+
+    function nextQuestion() {
+      currentIndex++;
+      showQuestion();
+    }
+
+    function showSummary() {
+      document.getElementById("game").style.display = "none";
+      document.getElementById("summary").style.display = "block";
+      const msg = `Kamu menjawab ${score} benar dan ${incorrect} salah.`;
+      const motivation = score >= 3 ? "Keren! Kamu pintar dan teliti! 🌟" : "Tetap semangat ya! Terus belajar dan coba lagi! 💪";
+      document.getElementById("result").textContent = msg;
+      document.getElementById("motivation").textContent = motivation;
+    }
+  </script>
+
+</!doctype>
